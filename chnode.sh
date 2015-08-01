@@ -76,7 +76,8 @@ chnode() {
 
 				local dir=
 				for dir in "${search[@]}"; do
-					[ -n "$(ls -A "$dir" 2>/dev/null)" ] && NODES+=("$dir"/*)
+					local nodes=("$dir"/*)
+					[ -e "${nodes[0]}" ] && NODES+=(${nodes[@]})
 				done
 				return
 				;;
