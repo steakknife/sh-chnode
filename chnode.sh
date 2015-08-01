@@ -71,7 +71,10 @@ chnode() {
 
 			--silent-refresh)
 				NODES=()
-				[ -d /usr/local/Cellar/node ] && NODES+=(/usr/local/Cellar/node/*)
+				local dir=
+				for dir in "/usr/local/Cellar/node" "/opt/nodes" "~/.nodes"; do
+					[ -d "$dir" ] && NODES+=("$dir"/*)
+				done
 				return
 				;;
 
