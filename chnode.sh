@@ -73,7 +73,7 @@ chnode() {
 				NODES=()
 				local dir=
 				for dir in "/usr/local/Cellar/node" "/opt/nodes" "~/.nodes"; do
-					[ -d "$dir" ] && NODES+=("$dir"/*)
+					[ -n "$(ls -A "$dir" 2>&-)" ] && NODES+=("$dir"/*)
 				done
 				return
 				;;
