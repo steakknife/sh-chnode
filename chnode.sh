@@ -71,12 +71,13 @@ chnode() {
 
 			--silent-refresh)
 				NODES=()
+
 				local search
 				search=("/opt/nodes" "~/.nodes")
-				if [ -d "${HOMEBREW_PREFIX:-/usr/local}" ]; then
-					search+=("${HOMEBREW_PREFIX:-/Cellar/node}")
-				elif command -v brew &>/dev/null; then
-					search+=("$(brew --prefix)/Cellar/node")
+				local brewexec
+				if brewexec="$(command -v brew)"; then
+					local brewdir="${brewexec%/*/*}"
+					search+=("${brewdir}/Cellar/node")
 				fi
 
 				local dir
