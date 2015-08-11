@@ -71,16 +71,19 @@ chnode() {
 
 			--silent-refresh)
 				NODES=()
-				local search=("/opt/nodes" "~/.nodes")
+				local search
+				search=("/opt/nodes" "~/.nodes")
 				if [ -d "${HOMEBREW_PREFIX:-/usr/local}" ]; then
 					search+=("${HOMEBREW_PREFIX:-/Cellar/node}")
 				elif command -v brew &>/dev/null; then
 					search+=("$(brew --prefix)/Cellar/node")
 				fi
 
-				local dir=
+				local dir
+				local nodes
+				[ -n "$ZSH_NAME" ] && setopt localoptions nullglob KSH_ARRAYS
 				for dir in "${search[@]}"; do
-					local nodes=("$dir"/*)
+					nodes=("$dir"/*)
 					[ -e "${nodes[0]}" ] && NODES+=(${nodes[@]})
 				done
 				return
