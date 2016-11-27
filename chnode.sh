@@ -1,4 +1,3 @@
-#!/bin/sh
 if [ -z "$PS1" -a -z "$PS2" ]; then
 	echo "Please load chnode to your shell with: . $0" >&2
 	exit 1
