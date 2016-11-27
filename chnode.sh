@@ -71,7 +71,22 @@ chnode() {
 
 			--silent-refresh)
 				NODES=()
-				[ -d /usr/local/Cellar/node ] && NODES+=(/usr/local/Cellar/node/*)
+
+				local search
+				search=("/opt/nodes" "~/.nodes")
+				local brewexec
+				if brewexec="$(command -v brew)"; then
+					local brewdir="${brewexec%/*/*}"
+					search+=("${brewdir}/Cellar/node")
+				fi
+
+				local dir
+				local nodes
+				[ -n "$ZSH_NAME" ] && setopt localoptions nullglob KSH_ARRAYS
+				for dir in "${search[@]}"; do
+					nodes=("$dir"/*)
+					[ -e "${nodes[0]}" ] && NODES+=(${nodes[@]})
+				done
 				return
 				;;
 
