@@ -1,4 +1,5 @@
-if [ -z "$PS1" -a -z "$PS2" ]; then
+#!/usr/bin/env false
+if [ -z "$PS1" -a -z "$PS2" -a -z "$CHNODE_ARGS" ]; then
 	echo "Please load chnode to your shell with: . $0" >&2
 	exit 1
 fi
@@ -20,7 +21,7 @@ chnode() {
 			--usage)
 				echo "Usage: chnode [OPTIONS] VERSION"
 				echo "       chnode [OPTIONS] system"
-				echo "Try \"chnode --help\" for more information."
+				echo "Try \"chnode --help\" for more information"
 				return
 				;;
 
@@ -30,11 +31,11 @@ chnode() {
 				echo "${usage%$'\n'*}"
 				echo
 				echo "Options:"
-				echo "    -h, -?, --help  Display this help."
-				echo "    -l, --list      List all available Node versions."
-				echo "    -r, --refresh   Refresh and find all available Node versions."
-				echo "    -v, --verbose   Be verbose when changing versions."
-				echo "    -V, --version   Display version information."
+				echo "    -h, -?, --help  Display this help"
+				echo "    -l, --list      List all available Node versions"
+				echo "    -r, --refresh   Refresh and find all available Node versions"
+				echo "    -v, --verbose   Be verbose when changing versions"
+				echo "    -V, --version   Display version information"
 				echo
 
 				echo "Available Node versions:"
@@ -47,8 +48,8 @@ chnode() {
 				done
 
 				echo
-				echo "For help or feedback please contact Andri Möll <andri@dot.ee> or"
-				echo "see https://github.com/moll/sh-chnode."
+				echo "For help or feedback please contact Barry Allard <barry.allard@gmail.com> (previous maintainer was Andri Möll <andri@dot.ee>)"
+				echo "see https://github.com/steakknife/chnode."
 				return
 				;;
 
@@ -57,7 +58,8 @@ chnode() {
 				;;
 
 			-V | --version)
-				echo "Chnode.sh v1.2.0"
+				echo "Chnode v1.2.1"
+				echo "Copyright (C) 2016– Barry Allard <barry.allard@gmail.com>"
 				echo "Copyright (C) 2013– Andri Möll <andri@dot.ee>"
 				return
 				;;
@@ -72,11 +74,14 @@ chnode() {
 				NODES=()
 
 				local search
-				search=("/opt/nodes" "~/.nodes")
-				local brewexec
+				search=("/opt/nodes" "~/.nodes" "~/.nodenv/versions" "/usr/local/n/versions" "~/.nvm/versions/node")
+				local brewexec brewdir brewcellar
+				
 				if brewexec="$(command -v brew)"; then
-					local brewdir="${brewexec%/*/*}"
-					search+=("${brewdir}/Cellar/node")
+					if brewcellar="$(brew --cellar 2>/dev/null)"; then
+					    [ -d "${brewcellar}"/node ] && search+=("${brewcellar}"/node)
+					    { [ -d "${brewcellar}"/node[0-9]* ] && search+=("${brewcellar}"/node[0-9]*); } 2>/dev/null || true
+					fi
 				fi
 
 				local dir
@@ -121,8 +126,12 @@ chnode() {
 
 	if [ "$1" = system ]; then
 		local current="$(node --version 2>/dev/null)"; current=${current#v}
-		[ $verbose -gt 0 ] && echo "Switched to Node $current."
-		return
+		if [ -z "$current" ]; then
+			echo "Missing system Node"
+			return 1
+		fi
+		[ $verbose -gt 0 ] && echo "Switched to Node $current"
+		return 0
 	fi
 
 	local root=
@@ -152,7 +161,7 @@ chnode() {
 	done
 
 	if [ -z "$root" ]; then
-		echo "Sorry, couldn't locate Node $1."
+		echo "Sorry, couldn't locate Node $1"
 		echo
 		echo "Available Node versions:"
 		local version=
@@ -164,7 +173,7 @@ chnode() {
 
 	# No news is good news.
 	if [ $verbose -gt 0 ]; then
-		echo "Switched to Node $(basename "$root") at $root."
+		echo "Switched to Node $(basename "$root") at $root"
 	fi
 
 	# Have shell refresh its cache of binaries.

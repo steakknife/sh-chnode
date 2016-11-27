@@ -1,4 +1,4 @@
-Chnode.sh
+Chnode
 =========
 [![NPM version][npm-badge]](http://badge.fury.io/js/chnode)
 [npm-badge]: https://badge.fury.io/js/chnode.png
@@ -10,15 +10,18 @@ Mac's [Homebrew][homebrew].
 [homebrew]: https://github.com/Homebrew/homebrew
 
 ### Tour
-- Change only the current shell without affecting the rest of the system.
-- Works out of the box with paths used by Mac's [Homebrew][homebrew].
-- Extendable by adding more Node paths to the `NODES` variable.
+- Change only the current shell without affecting the rest of the system
+- Works out of the box with paths used by Mac's [Homebrew][homebrew]
+- Extendable by adding more Node paths to the `NODES` variable
 - Leaves installing Node versions to your package manager thereby adhering to
-  the *do one thing and do it well* principle.
-- Works in Bash and Zsh. And possibly other POSIX compatible shells.
-- Does not pollute your shell namespaces with internal functions.
-- Lightweight.
-- Written in the shell language. [KISS][kiss].
+  the *do one thing and do it well* principle
+- Works in Bash and Zsh, and possibly other POSIX compatible shells
+- Does not pollute your shell namespaces with internal functions
+- Lightweight
+- Written in the shell language ([KISS][kiss])
+- Able to automaticallly-switch `node`s (source `chnode-auto` instead of `chnode`)
+- Able to run under a node without hooking the shell (via `chnode-exec`)
+- Doesn't hook `cd`
 
 Side note: I'm terribly ashamed of not yet having tests!
 
@@ -26,34 +29,38 @@ Side note: I'm terribly ashamed of not yet having tests!
 
 ### Differences
 There are a few existing tools for switching Node versions, so how does
-Chnode.sh differ?
+Chnode differ?
 - It **does not** manage installations.  
   Existing package managers (GNU/Linux distros', Homebrew etc.) do a better job
   of installing or compiling securely than such scripts.
 - It's **really lightweight** — just a single shell function.  
   No build tools or compilers necessary.
 - It changes the node version **only for the current shell session**.  
-  Tools like [N][n] or [NVM][nvm] affect the entire system or all open shells.
+  Tools like [n][n] or [nvm][nvm] affect the entire system or all open shells.
   That's why if you need to test a single app in multiple Node versions,
-  Chnode.sh comes very handy.
+  Chnode comes very handy.
 
 ### Alternatives
-If you do insist on compiling and installing Nodes via 3rd party tools, check
+If you do insist on compiling and installing Nodes via 3rd-party tools, check
 these out:
-- [NVM][nvm]
-- [N][n]
-- [Nodist][nodist]
+- [nvm][nvm]
+- [n][n]
+- [nodist][nodist]
+- [nodenv][nodenv]
+- [node-build][node-build] (node-env plugin)
 
 [nvm]: https://github.com/brianloveswords/nvm
 [n]: https://github.com/visionmedia/n
 [nodist]: https://github.com/marcelklehr/nodist
+[nodenv]: https://github.com/nodenv/nodenv
+[node-build]: https://github.com/nodenv/node-build
 
 
 Installing
 ----------
-Install Chnode.sh globally with:
+Install Chnode globally with:
 ```sh
-npm install --global chnode
+npm install --global steakknife/chnode
 ```
 
 Then source it in your shell:
@@ -69,6 +76,19 @@ your shell loading.
 echo ". \"$(npm bin --global)/chnode\""
 ```
 
+Installing automatic-switching
+------------------------------
+If `.nvmrc` or `.node-version` are available, use the following to switch nodes automatically:
+
+```sh
+. "$(npm bin --global)/chnode-auto"
+```
+
+Run using a specific node version (without switching)
+---------------------------------------------------------
+```sh
+"$(npm bin --global)/chnode-exec" 6.9 -- node ...
+```
 
 Using
 -----
@@ -104,7 +124,7 @@ Option           | Description
 
 Configuring
 -----------
-On the Mac Chnode.sh will find installed Nodes in `/usr/local/Cellar/node`.  
+On the Mac, Chnode will find installed Nodes in `/usr/local/Cellar/node`.  
 If you've got installations somewhere else, set the `NODES` variable to an
 **array of paths** of **individual versions**:
 ```sh
@@ -117,13 +137,12 @@ For example, if you've got Node compiled from the source at
 NODES+=(~/Development/node-master)
 ```
 
-If you think Chnode.sh should detect some of your paths automatically, please
+If you think Chnode should detect some of your paths automatically, please
 let me know by [creating an issue][issues]. Thanks!
-
 
 License
 -------
-Chnode.sh is released under a *Lesser GNU Affero General Public License*, which
+Chnode is released under a *Lesser GNU Affero General Public License*, which
 in summary means:
 
 - You **can** use this program for **no cost**.
@@ -132,7 +151,7 @@ in summary means:
 - You **have to share modifications** (e.g bug-fixes) you've made to this
   program.
 
-For more convoluted language, see the `LICENSE` file.
+For full legalese, see the [LICENSE](LICENSE) file.
 
 
 About
@@ -140,8 +159,8 @@ About
 **[Andri Möll](http://themoll.com)** typed this and the code.  
 [Monday Calendar](https://mondayapp.com) supported the engineering work.
 
-If you find Chnode.sh needs improving, please don't hesitate to type to me now
+If you find Chnode needs improving, please don't hesitate to type to me now
 at [andri@dot.ee][email] or [create an issue online][issues].
 
 [email]: mailto:andri@dot.ee
-[issues]: https://github.com/moll/sh-chnode/issues
+[issues]: https://github.com/steakknife/chnode/issues

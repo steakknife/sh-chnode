@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+CHNODE_ARGS=
+while [ -n "$1" ]; do
+  case "$1" in
+    -h | --help   ) echo "usage: chnode-exec NODE -- COMMAND [ARGS...]"; exit ;;
+    -V | --version) chnode -V; exit ;;
+    --            ) break ;;
+    *             ) CHNODE_ARGS="$CHNODE_ARGS $1"
+  esac
+  shift
+done
+
+. "$(dirname "$0")/chnode"
+chnode $CHNODE_ARGS
+unset CHNODE_ARGS
+exec "$@"
