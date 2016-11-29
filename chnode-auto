@@ -32,7 +32,18 @@ if [ -n "$ZSH_VERSION" ]; then
     preexec_functions+=("chnode-auto")
   fi
 elif [ -n "$BASH_VERSION" ]; then
-  trap '[[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]] && chnode-auto' DEBUG
+  CHNODE_AUTO_TRAP='[[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]] && chnode-auto'
+  if [[ "$(trap -p DEBUG)" =~ DEBUG ]]; then
+    if ! [[ "$(trap -p DEBUG)" =~ "$CHNODE_AUTO_TRAP" ]]; then
+      unset CHNODE_AUTO_TRAP
+      echo 'chnode-auto cannot be installed - DEBUG trap already set' >&2
+      return 1
+    fi
+  else
+    trap "$CHNODE_AUTO_TRAP" DEBUG
+    unset CHNODE_AUTO_TRAP
+  fi
+  trap "$CHNODE_AUTO_TRAP" DEBUG
 else
   echo "Unsupported shell $SHELL"
   false
