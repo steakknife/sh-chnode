@@ -4,6 +4,7 @@
 unset CHNODE_AUTO_VERSION
 
 chnode-auto() {
+  local old_="$1" #  https://github.com/postmodern/chruby/pull/381
   local dir="$PWD/" version
 
   until [ -z "$dir" ]; do
@@ -19,6 +20,7 @@ chnode-auto() {
         return $?
       fi
     fi
+    : "$old_"
   done
 
   if [ -n "$CHNODE_AUTO_VERSION" ]; then
@@ -32,7 +34,7 @@ if [ -n "$ZSH_VERSION" ]; then
     preexec_functions+=("chnode-auto")
   fi
 elif [ -n "$BASH_VERSION" ]; then
-  CHNODE_AUTO_TRAP='[[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]] && chnode-auto'
+  CHNODE_AUTO_TRAP='local [[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]] && chnode-auto "$_"'
   if [[ "$(trap -p DEBUG)" =~ DEBUG ]]; then
     if ! [[ "$(trap -p DEBUG)" =~ "$CHNODE_AUTO_TRAP" ]]; then
       unset CHNODE_AUTO_TRAP
