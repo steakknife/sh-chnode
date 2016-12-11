@@ -74,7 +74,7 @@ chnode() {
 				NODES=()
 
 				local search
-				search=("/opt/nodes" "~/.nodes" "~/.nodenv/versions" "/usr/local/n/versions" "~/.nvm/versions/node")
+				search=(/opt/nodes ~/.nodes ~/.nodenv/versions /usr/local/n/versions ~/.nvm/versions/node)
 				local brewexec brewdir brewcellar
 				
 				if brewexec="$(command -v brew)"; then
@@ -87,8 +87,7 @@ chnode() {
 					fi
 				fi
 
-				local dir
-				local nodes
+				local dir nodes
 				[ -n "$ZSH_NAME" ] && setopt localoptions nullglob KSH_ARRAYS
 				for dir in "${search[@]}"; do
 					nodes=("$dir"/*)
@@ -98,8 +97,11 @@ chnode() {
 				;;
 
 			-l | --list)
-				local dir=
-				for dir in "${NODES[@]}"; do echo "$(basename "$dir")"; done
+				local dir node
+				for dir in "${NODES[@]}"; do
+					node="$(basename "$dir")"
+					echo "${node#node-}"
+        done
 				return
 				;;
 
