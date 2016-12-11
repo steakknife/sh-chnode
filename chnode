@@ -79,8 +79,11 @@ chnode() {
 				
 				if brewexec="$(command -v brew)"; then
 					if brewcellar="$(brew --cellar 2>/dev/null)"; then
-					    [ -d "${brewcellar}"/node ] && search+=("${brewcellar}"/node)
-					    { [ -d "${brewcellar}"/node[0-9]* ] && search+=("${brewcellar}"/node[0-9]*); } 2>/dev/null || true
+            {
+						  search+=("${brewcellar}"/node) || true
+              search+=("${brewcellar}"/node[0-9]*) || true
+              search+=("${brewcellar}"/node@*) || true
+            } 2>/dev/null
 					fi
 				fi
 
