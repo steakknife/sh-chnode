@@ -1,7 +1,5 @@
 Chnode
 =========
-[![NPM version][npm-badge]](http://badge.fury.io/js/chnode)
-[npm-badge]: https://badge.fury.io/js/chnode.png
 
 Change between installed Node versions in your current shell with a simple
 `chnode VERSION`. Leaves the system version untouched. Works out of the box with
